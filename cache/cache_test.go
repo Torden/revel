@@ -43,6 +43,9 @@ func incrDecr(t *testing.T, newCache cacheFactory) {
 	if err = cache.Set("int", 10, ForEverNeverExpiry); err != nil {
 		t.Errorf("Error setting int: %s", err)
 	}
+
+	time.Sleep(100 * time.Millisecond)
+
 	newValue, err := cache.Increment("int", 50)
 	if err != nil {
 		t.Errorf("Error incrementing int: %s", err)
@@ -225,10 +228,12 @@ func testGetMulti(t *testing.T, newCache cacheFactory) {
 	var keys []string
 	for key, value := range m {
 		keys = append(keys, key)
-		if err := cache.Set(key, value, time.Second*10); err != nil {
+		if err := cache.Set(key, value, time.Second*30); err != nil {
 			t.Errorf("Error setting a value: %s", err)
 		}
 	}
+
+	time.Sleep(100 * time.Millisecond)
 
 	g, err := cache.GetMulti(keys...)
 	if err != nil {
